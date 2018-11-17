@@ -12,7 +12,7 @@ namespace FoodInfo.Service.Models
         public string CountryCode { get; set; }
         public string CountryName { get; set; }
         //
-        public ICollection<ProductLanguage> ProductLanguages { get; set; }
-
+        public ICollection<ProductContent> ProductContents { get; set; }
+        
     }
 }

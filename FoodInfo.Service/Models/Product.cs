@@ -19,8 +19,8 @@ namespace FoodInfo.Service.Models
         public string ProductPicturePath { get; set;  }
         public int ProductGroupId { get; set; }
         //
-        public ICollection<ProductLanguage> ProductLanguages { get; set; }
-
+        public byte  [] Image { get; set; }
+        public ICollection<ProductContent> ProductContents { get; set; }
         //
         public virtual ProductCategory ProductCategory { get; set; }
 

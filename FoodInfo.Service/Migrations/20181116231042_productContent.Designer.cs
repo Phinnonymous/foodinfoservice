@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodInfo.Service.Migrations
 {
     [DbContext(typeof(FoodInfoServiceContext))]
-    [Migration("20181022090908_Initial_third")]
-    partial class Initial_third
+    [Migration("20181116231042_productContent")]
+    partial class productContent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,6 +44,33 @@ namespace FoodInfo.Service.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("FoodInfo.Service.Models.NutritionFacts", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Carbohydrate");
+
+                    b.Property<decimal>("Energy");
+
+                    b.Property<decimal>("Fat");
+
+                    b.Property<decimal>("Fiber");
+
+                    b.Property<decimal>("Protein");
+
+                    b.Property<decimal>("Salt");
+
+                    b.Property<decimal>("SaturatedFattyAcids");
+
+                    b.Property<decimal>("TransFattyAcids");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("NutritionFacts");
                 });
 
             modelBuilder.Entity("FoodInfo.Service.Models.Product", b =>
@@ -87,9 +114,48 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<string>("CategoryName");
 
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int?>("CreatedUserId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("ModifiedUserId");
+
                     b.HasKey("ID");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("FoodInfo.Service.Models.ProductContent", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CookingTips");
+
+                    b.Property<string>("Ingredients");
+
+                    b.Property<int?>("NutritionFactID");
+
+                    b.Property<int?>("ProductID");
+
+                    b.Property<string>("Recommendations");
+
+                    b.Property<string>("VideoURL");
+
+                    b.Property<string>("Warnings");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("NutritionFactID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductContents");
                 });
 
             modelBuilder.Entity("FoodInfo.Service.Models.ProductLanguage", b =>
@@ -131,7 +197,14 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<int?>("CreatedUserId");
 
+                    b.Property<string>("Email")
+                        .IsRequired();
+
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsModerator");
 
                     b.Property<DateTime?>("ModifiedDate");
 
@@ -139,19 +212,21 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.Property<string>("Surname");
 
-                    b.Property<string>("Username");
+                    b.Property<string>("Username")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
                     b.ToTable("User");
 
                     b.HasData(
-                        new { ID = 1, CreatedDate = new DateTime(2018, 10, 22, 11, 9, 7, 843, DateTimeKind.Local), IsDeleted = false, Name = "Fatih", Surname = "Cankurtaran" },
-                        new { ID = 2, CreatedDate = new DateTime(2018, 10, 22, 11, 9, 7, 844, DateTimeKind.Local), IsDeleted = false, Name = "Yusuf", Surname = "Kocadas" }
+                        new { ID = 1, CreatedDate = new DateTime(2018, 11, 17, 0, 10, 42, 159, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "123", Surname = "Cankurtaran", Username = "fatih" },
+                        new { ID = 2, CreatedDate = new DateTime(2018, 11, 17, 0, 10, 42, 161, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "123", Surname = "Kocadas", Username = "yusuf" }
                     );
                 });
 
@@ -160,6 +235,17 @@ namespace FoodInfo.Service.Migrations
                     b.HasOne("FoodInfo.Service.Models.ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryID");
+                });
+
+            modelBuilder.Entity("FoodInfo.Service.Models.ProductContent", b =>
+                {
+                    b.HasOne("FoodInfo.Service.Models.NutritionFacts", "NutritionFact")
+                        .WithMany("ProductContent")
+                        .HasForeignKey("NutritionFactID");
+
+                    b.HasOne("FoodInfo.Service.Models.Product", "Product")
+                        .WithMany("ProductContents")
+                        .HasForeignKey("ProductID");
                 });
 
             modelBuilder.Entity("FoodInfo.Service.Models.ProductLanguage", b =>

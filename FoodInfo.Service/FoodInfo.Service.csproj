@@ -8,6 +8,28 @@
   <ItemGroup>
     <Compile Remove="Migrations\20181021184018_Reset.cs" />
     <Compile Remove="Migrations\20181021184018_Reset.Designer.cs" />
+    <Compile Remove="Migrations\20181021184119_Initial.cs" />
+    <Compile Remove="Migrations\20181021184119_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20181021184202_Product.cs" />
+    <Compile Remove="Migrations\20181021184202_Product.Designer.cs" />
+    <Compile Remove="Migrations\20181021184501_Product_Second.cs" />
+    <Compile Remove="Migrations\20181021184501_Product_Second.Designer.cs" />
+    <Compile Remove="Migrations\20181021184932_ProductGroupIdAdded.cs" />
+    <Compile Remove="Migrations\20181021184932_ProductGroupIdAdded.Designer.cs" />
+    <Compile Remove="Migrations\20181022084514_FirstDesign.cs" />
+    <Compile Remove="Migrations\20181022084514_FirstDesign.Designer.cs" />
+    <Compile Remove="Migrations\20181022085528_Initial_second.cs" />
+    <Compile Remove="Migrations\20181022085528_Initial_second.Designer.cs" />
+    <Compile Remove="Migrations\20181022090908_Initial_third.cs" />
+    <Compile Remove="Migrations\20181022090908_Initial_third.Designer.cs" />
+    <Compile Remove="Migrations\20181023114340_for_database.cs" />
+    <Compile Remove="Migrations\20181023114340_for_database.Designer.cs" />
+    <Compile Remove="Migrations\20181026175928_user-email added.cs" />
+    <Compile Remove="Migrations\20181026175928_user-email added.Designer.cs" />
+    <Compile Remove="Migrations\20181116135147_ProdctContents.cs" />
+    <Compile Remove="Migrations\20181116135147_ProdctContents.Designer.cs" />
+    <Compile Remove="Migrations\20181116165535_contentes.cs" />
+    <Compile Remove="Migrations\20181116165535_contentes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,15 +20,16 @@ namespace FoodInfo.Service.Models
         public DbSet<User> User { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<ProductLanguage> ProductLanguages { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<NutritionFacts> NutritionFacts { get; set; }
+        public DbSet<ProductContent> ProductContents { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=13.59.157.144; Database=FoodInforService; User Id=fiservice;Password=foodinfoservice;");
-              //  optionsBuilder.UseSqlServer(@"Server=localhost; Database=FoodInforService; Integrated Security=True;");
+                optionsBuilder.UseSqlServer(@"Server=13.59.157.144; Database=FoodInfoService; User Id=fiservice;Password=foodinfoservice;");
+             // optionsBuilder.UseSqlServer(@"Server=localhost; Database=FoodInforService; Integrated Security=True;");
 
 
             }
@@ -46,15 +47,13 @@ namespace FoodInfo.Service.Models
             //modelBuilder.Entity<User>()
             //    .Property(b => b.Name)
             //    .IsRequired(true);
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.ProductLanguages);
+            
 
 
             modelBuilder.Entity<ProductCategory>()
                 .HasMany(p => p.Products);
 
-            modelBuilder.Entity<Language>()
-                .HasMany(p => p.ProductLanguages);
+            
             
         }
 
