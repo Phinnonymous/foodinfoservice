@@ -18,8 +18,8 @@ namespace FoodInfo.Service.Controllers
     {
         // GET api/values
         [HttpPost]
-        
-        public async Task<IActionResult>  Get(User user)
+
+        public IActionResult Get(User user)
         {
             try
             {
@@ -33,29 +33,29 @@ namespace FoodInfo.Service.Controllers
             }
             catch { }
 
-                //    if (request == null)
-                //    {
-                //        return NotFound(new ApiResponse(404, $"Product not found with id {request.value}"));
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    try
-                //    {
+            //    if (request == null)
+            //    {
+            //        return NotFound(new ApiResponse(404, $"Product not found with id {request.value}"));
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    try
+            //    {
 
-                //        return BadRequest(new ApiBadRequestResponse(ModelState));
+            //        return BadRequest(new ApiBadRequestResponse(ModelState));
 
-                //    }
-                //    catch (Exception ep){ }
-                //    }
+            //    }
+            //    catch (Exception ep){ }
+            //    }
 
-                using (FoodInfoServiceContext foodInfoServiceContext = new FoodInfoServiceContext())
+            using (FoodInfoServiceContext foodInfoServiceContext = new FoodInfoServiceContext())
             {
 
                 return Ok(new ApiOkResponse(foodInfoServiceContext.User.FirstOrDefault(x => x.Name == "Fatih")));
 
             }
-               
+
 
             //mymodel a = new mymodel();
             //a.name = "Fatih";
@@ -70,10 +70,10 @@ namespace FoodInfo.Service.Controllers
             //mysecondmodels.Add(mysecondmodel);
             //string injson = JsonConvert.SerializeObject(a);
             //mymodel notjson = JsonConvert.DeserializeObject<mymodel>(injson);
-            
+
             //return JsonConvert.SerializeObject(a);
 
-            
+
         }
 
         // GET api/values/5

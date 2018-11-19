@@ -39,8 +39,8 @@ namespace FoodInfo.Service.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasData(new User { ID = 1, Name = "Fatih", Surname = "Cankurtaran" ,Email="f@gmail.com", Username= "fatih",Password ="123"},
-                        new User { ID = 2, Name = "Yusuf", Surname = "Kocadas" , Email ="y@gmail.com",Username="yusuf", Password = "123" }
+                .HasData(new User { ID = 1, Name = "Fatih", Surname = "Cankurtaran" ,Email="f@gmail.com", Username= "fatih",Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02" },
+                        new User { ID = 2, Name = "Yusuf", Surname = "Kocadas" , Email ="y@gmail.com",Username="yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02" }
                 );
 
             /// This one will be used for setting properties.

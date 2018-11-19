@@ -24,8 +24,11 @@ namespace FoodInfo.Service
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Mapper.Initialize((cfg => { cfg.CreateMap<User, UserDTO>();
-                cfg.CreateMap<UserDTO, User>();
+            Mapper.Initialize((cfg => {
+            cfg.CreateMap<User, UserDTO>();
+            cfg.CreateMap<UserDTO, User>();
+            cfg.CreateMap<ModeratorDTO, User>();
+            cfg.CreateMap<AdminDTO, User>();
 
 
             } ));
@@ -41,7 +44,7 @@ namespace FoodInfo.Service
             services.AddAuthentication(HttpSysDefaults.AuthenticationScheme);
 
 
-            var connection = @"Server=18.191.129.27; Database=FoodInforService; User Id=fiservice;assword=foodinfoservice;ConnectRetryCount=0";
+           // var connection = @"Server=18.191.129.27; Database=FoodInforService; User Id=fiservice;assword=foodinfoservice;ConnectRetryCount=0";
 
             services.AddDbContext<FoodInfoServiceContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("FoodInfoServiceContext")));

@@ -4,14 +4,16 @@ using FoodInfo.Service.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodInfo.Service.Migrations
 {
     [DbContext(typeof(FoodInfoServiceContext))]
-    partial class FoodInfoServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20181117095320_LanguageModelChanged")]
+    partial class LanguageModelChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,8 +40,6 @@ namespace FoodInfo.Service.Migrations
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<int?>("ModifiedUserId");
-
-                    b.Property<string>("NativeLanguageName");
 
                     b.HasKey("ID");
 
@@ -202,8 +202,8 @@ namespace FoodInfo.Service.Migrations
                     b.ToTable("User");
 
                     b.HasData(
-                        new { ID = 1, CreatedDate = new DateTime(2018, 11, 17, 11, 3, 1, 373, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Cankurtaran", Username = "fatih" },
-                        new { ID = 2, CreatedDate = new DateTime(2018, 11, 17, 11, 3, 1, 384, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Kocadas", Username = "yusuf" }
+                        new { ID = 1, CreatedDate = new DateTime(2018, 11, 17, 10, 53, 19, 366, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Cankurtaran", Username = "fatih" },
+                        new { ID = 2, CreatedDate = new DateTime(2018, 11, 17, 10, 53, 19, 374, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Kocadas", Username = "yusuf" }
                     );
                 });
 

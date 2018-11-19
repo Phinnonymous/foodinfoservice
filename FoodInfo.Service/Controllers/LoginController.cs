@@ -15,17 +15,17 @@ namespace FoodInfo.Service.Controllers
     {
         [HttpPost]
         [Route("CheckUserOnLogin")]
-        public async Task<IActionResult> CheckUserOnLogin(LoginDTO loginDTO)
+        public IActionResult CheckUserOnLogin(LoginDTO loginDTO)
         {
             try
             {
                 using (FoodInfoServiceContext context = new FoodInfoServiceContext())
                 {
-                    var user = context.User.FirstOrDefault(x => x.Username == loginDTO.UsernameOrEmail || x.Email == loginDTO.UsernameOrEmail);
-                    if (user == null )
+                    var user = context.User.FirstOrDefault(x => x.Username == loginDTO.Username || x.Email == loginDTO.Email);
+                    if (user == null)
                     {
                         return BadRequest(new ApiBadRequestWithMessage("The user does not exist."));
-                        
+
                     }
                     if (user.IsDeleted == true)
                     {
@@ -36,21 +36,22 @@ namespace FoodInfo.Service.Controllers
                     {
                         return BadRequest(new ApiBadRequestWithMessage("Write a password for user."));
                     }
-                    if(HelperFunctions.ComputeSha256Hash(loginDTO.Password) == user.Password)
+                    if (HelperFunctions.ComputeSha256Hash(loginDTO.Password) == user.Password)
                     {
                         return Ok(new ApiOkResponse(loginDTO));
                     }
                     else
                     {
-                         return BadRequest(new ApiBadRequestWithMessage("The username or password is wrong."));
+                        return BadRequest(new ApiBadRequestWithMessage("The username or password is wrong."));
                     }
-                    
+
 
                 }
-                
+
 
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
 
                 return BadRequest(new ApiBadRequestWithMessage("The username or password is wrong."));
 

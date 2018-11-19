@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using FoodInfo.Service.DTOs;
 using AutoMapper;
 using FoodInfo.Service.Helper;
+
 namespace FoodInfo.Service.Controllers
 {
     [ApiController]
@@ -24,7 +25,7 @@ namespace FoodInfo.Service.Controllers
         //[ProducesResponseType(400)]
         [HttpPost]
         [Route("CreateUser")]
-        public async Task<IActionResult> CreateUser(UserDTO userDTO)
+        public IActionResult CreateUser(UserDTO userDTO)
         {
 
             try
@@ -35,12 +36,12 @@ namespace FoodInfo.Service.Controllers
 
                     if (context.User.Any(m => m.Email == userDTO.Email || m.Username == userDTO.Username))
                     {
-                        return BadRequest(new ApiBadRequestWithMessage("Username or Email already exist."));
+                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.UserNameOrEmailAlreadyExistError));
 
                     }
-                    
+
                     var hashedPassword = HelperFunctions.ComputeSha256Hash(userDTO.Password);
-                    userDTO.Password = hashedPassword; 
+                    userDTO.Password = hashedPassword;
                     var x = context.User.Add(Mapper.Map<User>(userDTO));
 
                     //if (!ModelState.IsValid)
@@ -48,7 +49,7 @@ namespace FoodInfo.Service.Controllers
                     //    return BadRequest(new ApiBadRequestResponse(ModelState));
                     //}
                     context.SaveChanges();
-                    UserDTO userCredentialsOnSuccess = new UserDTO() ;
+                    UserDTO userCredentialsOnSuccess = new UserDTO();
                     userCredentialsOnSuccess.Name = userDTO.Name;
                     userCredentialsOnSuccess.Surname = userDTO.Surname;
                     userCredentialsOnSuccess.Username = userDTO.Username;
@@ -63,7 +64,7 @@ namespace FoodInfo.Service.Controllers
 
                 }
             }
-            catch(Exception ex) { return BadRequest(); }
+            catch (Exception ex) { return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage)); }
 
 
             //    try
@@ -100,44 +101,115 @@ namespace FoodInfo.Service.Controllers
 
         [HttpPost]
         [Route("GetUserDetailByUsername")]
-        public async Task<IActionResult> GetUserDetailByUsername (UserDTO userDTO)
+        public IActionResult GetUserDetailByUsername(UserDTO userDTO)
         {
             using (FoodInfoServiceContext context = new FoodInfoServiceContext())
             {
                 var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
-                
+
 
                 return Ok(new ApiOkResponse(Mapper.Map<UserDTO>(user)));
-                    }
+            }
 
+        }
+        [HttpPost]
+        [Route("SetModeratorByUsername")]
+        public IActionResult SetModeratorByUsername(UserDTO userDTO)
+        {
+            try
+            {
+
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
+
+                    if (user == null)
+                    {
+                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.UserNotFoundError));
+
+                    }
+                    else
+                    {
+                        user.IsModerator = true;
+                        user.IsAdmin = false;
+
+                        if(userDTO.ModifiedUserId != null )
+                        { user.ModifiedUserId = userDTO.ModifiedUserId;  }
+                        user.ModifiedDate = DateTime.Now;
+                        context.SaveChanges();
+                        return Ok(new ApiOkResponse(Mapper.Map<ModeratorDTO>(user)));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage));
+            }
+
+        }
+
+        [HttpPost]
+        [Route("SetAdminByUsername")]
+        public IActionResult SetAdminByUsername(UserDTO userDTO)
+        {
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
+
+                    if (user == null)
+                    {
+                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.UserNotFoundError));
+
+                    }
+                    else
+                    {
+                        user.IsModerator = false;
+                        user.IsAdmin = true;
+                        user.ModifiedDate = DateTime.Now;
+                        if (userDTO.ModifiedUserId != null)
+                        {
+                            user.ModifiedUserId = userDTO.ModifiedUserId;
+                        }
+                        context.SaveChanges();
+                        return Ok(new ApiOkResponse(Mapper.Map<AdminDTO>(user)));
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage));
+            }
         }
 
         [HttpGet]
         [Route("GetFirstUser")]
-        public async Task<IActionResult> GetFirstUser()
+        public IActionResult GetFirstUser()
         {
             //return Ok(new ApiResponse((int)HttpStatusCode.BadRequest, "Sistem Hatası"));
             //return BadRequest(new ApiBadRequestResponse(ModelState));
             using (FoodInfoServiceContext foodInfoServiceContext = new FoodInfoServiceContext())
             {
                 var user = foodInfoServiceContext.User.FirstOrDefault(x => x.Name == "Fatih1");
-               if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return BadRequest(new ApiBadRequestResponse(ModelState));
                 }
-               if(user == null)
+                if (user == null)
                 {
-                    
-                    
+
+
                     return BadRequest(new ApiBadRequestWithMessage("User can not be found"));
-                        
+
                 }
                 return Ok(new ApiOkResponse(user));
             }
-                
+
         }
-        
-        
+
+
 
 
     }

@@ -10,7 +10,7 @@ namespace FoodInfo.Service.Controllers
 {
     public class ApiResponse: ControllerBase
     {
-        public int StatusCode { get; }
+        public new int StatusCode { get; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; }
         public string Parameters { get; }

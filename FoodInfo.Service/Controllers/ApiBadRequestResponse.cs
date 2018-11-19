@@ -24,7 +24,7 @@ namespace FoodInfo.Service.Controllers
         
     }
     public class ApiBadRequestWithMessage : ApiResponse
-    {   public  string Message { get; }
+    {  public new string  Message { get; }
         public ApiBadRequestWithMessage(string message )
             :base(400)
         {
