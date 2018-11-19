@@ -23,6 +23,7 @@ namespace FoodInfo.Service.Models
         public DbSet<Language> Languages { get; set; }
         public DbSet<NutritionFacts> NutritionFacts { get; set; }
         public DbSet<ProductContent> ProductContents { get; set; }
+        public DbSet<Error> Errors { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,6 +44,8 @@ namespace FoodInfo.Service.Models
                         new User { ID = 2, Name = "Yusuf", Surname = "Kocadas" , Email ="y@gmail.com",Username="yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02" }
                 );
 
+
+            
             /// This one will be used for setting properties.
             //modelBuilder.Entity<User>()
             //    .Property(b => b.Name)
@@ -53,7 +56,37 @@ namespace FoodInfo.Service.Models
             modelBuilder.Entity<ProductCategory>()
                 .HasMany(p => p.Products);
 
-            
+            //modelBuilder.Entity<Error>()
+            //    .HasData(
+            //#region SysError    
+
+            //    new Error { ID = 1, ErrorCode = "SYS001", ErrorMessage = "An internal error occurred. Please try again later." },
+
+            //#endregion
+
+            //#region UsrError
+            //      new Error
+            //      {
+            //          ID = 2,
+            //          ErrorCode = "USR001",
+            //          ErrorMessage = "User can not found."
+            //      },
+            //#endregion
+            //#region LngError
+
+            //#endregion
+
+            //#region LgnError
+
+            //      new Error { ID = 3,
+            //          ErrorCode = "LGN001",
+            //          ErrorMessage = "Username or Email already exist."
+            //      }
+
+            //#endregion
+
+            //    ); 
+
             
         }
 

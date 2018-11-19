@@ -7,8 +7,12 @@ namespace FoodInfo.Service.Helper
 {
     public class PublicConstants
     {
-        public static string SysErrorMessage = "An internal error occurred. Please try again later.";
-        public static string UserNotFoundError = "User can not found.";
-        public static string UserNameOrEmailAlreadyExistError = "Username or Email already exist.";
+        #region Errors
+
+        #endregion
+        public static string UserNameOrEmailAlreadyExistError { get;set;} = "LGN001";
+        public static string SysErrorMessage { get;set;} = "SYS001";
+        public static string UserNotFoundError { get; set; } = "USR001";
+
     }
 }
