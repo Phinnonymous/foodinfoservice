@@ -25,14 +25,18 @@ namespace FoodInfo.Service
         {
             Configuration = configuration;
             Mapper.Initialize((cfg => {
-            cfg.CreateMap<User, UserDTO>();
-            cfg.CreateMap<UserDTO, User>();
-            cfg.CreateMap<ModeratorDTO, User>();
-            cfg.CreateMap<AdminDTO, User>();
+                 cfg.CreateMap<User, UserDTO>();
+                 cfg.CreateMap<UserDTO, User>();
+                cfg.CreateMap<ModeratorDTO, User>();
+                cfg.CreateMap<AdminDTO, User>();
+                cfg.CreateMap<ErrorDTO, Error>();
+                cfg.CreateMap<Error, ErrorDTO>();
+                cfg.CreateMap<LanguageDTO, Language>();
 
 
             } ));
            
+
         }
 
         public IConfiguration Configuration { get; }

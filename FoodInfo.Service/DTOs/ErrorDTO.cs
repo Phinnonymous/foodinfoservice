@@ -7,11 +7,8 @@ namespace FoodInfo.Service.Models
 {
     public class ErrorDTO
     {
-        string code { get; set; }
-        string source { get; set; }
-        string message { get; set; }
-        string detail { get; set; }
-        string parameters { get; set; }
 
+        public string ErrorCode { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

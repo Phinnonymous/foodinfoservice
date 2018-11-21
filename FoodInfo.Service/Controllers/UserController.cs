@@ -14,6 +14,7 @@ using FoodInfo.Service.DTOs;
 using AutoMapper;
 using FoodInfo.Service.Helper;
 
+
 namespace FoodInfo.Service.Controllers
 {
     [ApiController]
@@ -27,7 +28,7 @@ namespace FoodInfo.Service.Controllers
         [Route("CreateUser")]
         public IActionResult CreateUser(UserDTO userDTO)
         {
-
+            var apiJsonResponse = new ApiJsonResponse();
             try
             {
                 using (FoodInfoServiceContext context = new FoodInfoServiceContext())
@@ -36,7 +37,7 @@ namespace FoodInfo.Service.Controllers
 
                     if (context.User.Any(m => m.Email == userDTO.Email || m.Username == userDTO.Username))
                     {
-                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.UserNameOrEmailAlreadyExistError));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNameOrEmailAlreadyExistError);
 
                     }
 
@@ -54,7 +55,7 @@ namespace FoodInfo.Service.Controllers
                     userCredentialsOnSuccess.Surname = userDTO.Surname;
                     userCredentialsOnSuccess.Username = userDTO.Username;
                     userCredentialsOnSuccess.Email = userDTO.Email;
-                    return Ok(new ApiOkResponse(userCredentialsOnSuccess));
+                    return apiJsonResponse.ApiOkContentResult(userCredentialsOnSuccess);
                     //var isExistUsername = foodInfoServiceContext.User.FirstOrDefault(x => x.Username == "Fatihs");
 
 
@@ -64,7 +65,10 @@ namespace FoodInfo.Service.Controllers
 
                 }
             }
-            catch (Exception ex) { return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage)); }
+            catch (Exception ex)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
 
 
             //    try
@@ -103,12 +107,28 @@ namespace FoodInfo.Service.Controllers
         [Route("GetUserDetailByUsername")]
         public IActionResult GetUserDetailByUsername(UserDTO userDTO)
         {
-            using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+            var apiJsonResponse = new ApiJsonResponse();
+            try
             {
-                var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
 
+                    if (user != null)
+                    {
+                        user.Password = null;
+                        return apiJsonResponse.ApiOkContentResult(Mapper.Map<UserDTO>(user));
+                    }
+                    else
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                  return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
 
-                return Ok(new ApiOkResponse(Mapper.Map<UserDTO>(user)));
             }
 
         }
@@ -116,6 +136,8 @@ namespace FoodInfo.Service.Controllers
         [Route("SetModeratorByUsername")]
         public IActionResult SetModeratorByUsername(UserDTO userDTO)
         {
+            var apiJsonResponse = new ApiJsonResponse();
+
             try
             {
 
@@ -125,7 +147,7 @@ namespace FoodInfo.Service.Controllers
 
                     if (user == null)
                     {
-                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.UserNotFoundError));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
 
                     }
                     else
@@ -135,15 +157,21 @@ namespace FoodInfo.Service.Controllers
 
                         if(userDTO.ModifiedUserId != null )
                         { user.ModifiedUserId = userDTO.ModifiedUserId;  }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
+                        }
                         user.ModifiedDate = DateTime.Now;
+                        
                         context.SaveChanges();
-                        return Ok(new ApiOkResponse(Mapper.Map<ModeratorDTO>(user)));
+                        
+                        return apiJsonResponse.ApiOkContentResult(Mapper.Map<ModeratorDTO>(user));
                     }
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage));
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
             }
 
         }
@@ -152,6 +180,9 @@ namespace FoodInfo.Service.Controllers
         [Route("SetAdminByUsername")]
         public IActionResult SetAdminByUsername(UserDTO userDTO)
         {
+
+            var apiJsonResponse = new ApiJsonResponse();
+
             try
             {
                 using (FoodInfoServiceContext context = new FoodInfoServiceContext())
@@ -160,7 +191,7 @@ namespace FoodInfo.Service.Controllers
 
                     if (user == null)
                     {
-                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.UserNotFoundError));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
 
                     }
                     else
@@ -172,15 +203,19 @@ namespace FoodInfo.Service.Controllers
                         {
                             user.ModifiedUserId = userDTO.ModifiedUserId;
                         }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
+                        }
                         context.SaveChanges();
-                        return Ok(new ApiOkResponse(Mapper.Map<AdminDTO>(user)));
+                        return apiJsonResponse.ApiOkContentResult(Mapper.Map<AdminDTO>(user));
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage));
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
             }
         }
 
@@ -188,23 +223,22 @@ namespace FoodInfo.Service.Controllers
         [Route("GetFirstUser")]
         public IActionResult GetFirstUser()
         {
+            var apiJsonResponse = new ApiJsonResponse();
+
             //return Ok(new ApiResponse((int)HttpStatusCode.BadRequest, "Sistem Hatası"));
             //return BadRequest(new ApiBadRequestResponse(ModelState));
             using (FoodInfoServiceContext foodInfoServiceContext = new FoodInfoServiceContext())
             {
-                var user = foodInfoServiceContext.User.FirstOrDefault(x => x.Name == "Fatih1");
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(new ApiBadRequestResponse(ModelState));
-                }
+                var user = foodInfoServiceContext.User.FirstOrDefault();
+                
                 if (user == null)
                 {
 
 
-                    return BadRequest(new ApiBadRequestWithMessage("User can not be found"));
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
 
                 }
-                return Ok(new ApiOkResponse(user));
+                return apiJsonResponse.ApiOkContentResult(Mapper.Map<UserDTO>(user));
             }
 
         }

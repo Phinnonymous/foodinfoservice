@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using FoodInfo.Service.DTOs;
-using FoodInfo.Service.Models;
+﻿using FoodInfo.Service.DTOs;
 using FoodInfo.Service.Helper;
+using FoodInfo.Service.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 namespace FoodInfo.Service.Controllers
 {
     [Route("api/[controller]")]
@@ -17,6 +14,7 @@ namespace FoodInfo.Service.Controllers
         [Route("CheckUserOnLogin")]
         public IActionResult CheckUserOnLogin(LoginDTO loginDTO)
         {
+            var apiJsonResponse = new ApiJsonResponse();
             try
             {
                 using (FoodInfoServiceContext context = new FoodInfoServiceContext())
@@ -24,25 +22,31 @@ namespace FoodInfo.Service.Controllers
                     var user = context.User.FirstOrDefault(x => x.Username == loginDTO.Username || x.Email == loginDTO.Email);
                     if (user == null)
                     {
-                        return BadRequest(new ApiBadRequestWithMessage("The user does not exist."));
+
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+
 
                     }
                     if (user.IsDeleted == true)
                     {
-                        return BadRequest(new ApiBadRequestWithMessage("The user does not exist."));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+
 
                     }
                     if (loginDTO.Password == string.Empty || loginDTO.Password == null)
                     {
-                        return BadRequest(new ApiBadRequestWithMessage("Write a password for user."));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.PasswordRequired);
+
+
                     }
                     if (HelperFunctions.ComputeSha256Hash(loginDTO.Password) == user.Password)
                     {
-                        return Ok(new ApiOkResponse(loginDTO));
+                        return apiJsonResponse.ApiOkContentResult(loginDTO);
                     }
                     else
                     {
-                        return BadRequest(new ApiBadRequestWithMessage("The username or password is wrong."));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UsernameOrPasswordWrong);
+
                     }
 
 
@@ -53,7 +57,7 @@ namespace FoodInfo.Service.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(new ApiBadRequestWithMessage("The username or password is wrong."));
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
 
             }
         }
