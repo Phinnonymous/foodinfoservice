@@ -25,6 +25,7 @@ namespace FoodInfo.Service.Controllers
         [Route("GetErrorList")]
         public IActionResult GetErrorList()
         {
+            var apiJsonResponse = new ApiJsonResponse();
             try
             {
 
@@ -34,13 +35,24 @@ namespace FoodInfo.Service.Controllers
                     var errors = context.Errors.Where(x => x.IsDeleted == false ).ToList();
                     if (errors != null)
                     {
-                       
-                        return Ok(new ApiOkResponse(Mapper.Map<ErrorDTO>(errors)));
+                        List<ErrorDTO> errorDTOs= new List<ErrorDTO>();
+                        foreach(var item in errors)
+                        {
+                            errorDTOs.Add(Mapper.Map<ErrorDTO>(item));
 
+                        }
+                        if (errorDTOs != null)
+                        {
+                            return apiJsonResponse.ApiOkContentResult(errorDTOs);
+                        }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage + " Error list could not be loaded.");
+                        }
                     }
-                    else { 
+                    else {
 
-                        return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage + " Error list could not be loaded."));
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage + " Error list could not be loaded.");
 
                     }
                 }
@@ -49,7 +61,8 @@ namespace FoodInfo.Service.Controllers
 
             catch (Exception ex)
             {
-                return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage + " Error list could not be loaded."));
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage + " Error list could not be loaded.");
+
 
             }
         }
