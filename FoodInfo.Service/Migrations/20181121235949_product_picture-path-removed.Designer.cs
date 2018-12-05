@@ -4,47 +4,22 @@ using FoodInfo.Service.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodInfo.Service.Migrations
 {
     [DbContext(typeof(FoodInfoServiceContext))]
-    partial class FoodInfoServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20181121235949_product_picture-path-removed")]
+    partial class product_picturepathremoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("FoodInfo.Service.Models.Comment", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int?>("CreatedUserId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int?>("ModifiedUserId");
-
-                    b.Property<int?>("ProductID");
-
-                    b.Property<string>("UserComment");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("Comments");
-                });
 
             modelBuilder.Entity("FoodInfo.Service.Models.Error", b =>
                 {
@@ -137,7 +112,7 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<int?>("CreatedUserId");
 
-                    b.Property<byte[]>("FirstImage");
+                    b.Property<byte[]>("Image");
 
                     b.Property<bool>("IsDeleted");
 
@@ -150,10 +125,6 @@ namespace FoodInfo.Service.Migrations
                     b.Property<int>("ProductGroupId");
 
                     b.Property<string>("ProductName");
-
-                    b.Property<byte[]>("SecondImage");
-
-                    b.Property<byte[]>("ThirdImage");
 
                     b.HasKey("ID");
 
@@ -193,21 +164,9 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<string>("CookingTips");
 
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int?>("CreatedUserId");
-
-                    b.Property<string>("Details");
-
                     b.Property<string>("Ingredients");
 
-                    b.Property<bool>("IsDeleted");
-
                     b.Property<int?>("LanguageID");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int?>("ModifiedUserId");
 
                     b.Property<int?>("NutritionFactID");
 
@@ -268,43 +227,9 @@ namespace FoodInfo.Service.Migrations
                     b.ToTable("User");
 
                     b.HasData(
-                        new { ID = 1, CreatedDate = new DateTime(2018, 12, 5, 11, 47, 59, 453, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Cankurtaran", Username = "fatih" },
-                        new { ID = 2, CreatedDate = new DateTime(2018, 12, 5, 11, 47, 59, 463, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Kocadas", Username = "yusuf" }
+                        new { ID = 1, CreatedDate = new DateTime(2018, 11, 22, 0, 59, 49, 324, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Cankurtaran", Username = "fatih" },
+                        new { ID = 2, CreatedDate = new DateTime(2018, 11, 22, 0, 59, 49, 326, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Kocadas", Username = "yusuf" }
                     );
-                });
-
-            modelBuilder.Entity("FoodInfo.Service.Models.Vote", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int?>("CreatedUserId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int?>("ModifiedUserId");
-
-                    b.Property<int?>("ProductID");
-
-                    b.Property<int>("UserVote");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("Votes");
-                });
-
-            modelBuilder.Entity("FoodInfo.Service.Models.Comment", b =>
-                {
-                    b.HasOne("FoodInfo.Service.Models.Product", "Product")
-                        .WithMany("Comments")
-                        .HasForeignKey("ProductID");
                 });
 
             modelBuilder.Entity("FoodInfo.Service.Models.Product", b =>
@@ -326,13 +251,6 @@ namespace FoodInfo.Service.Migrations
 
                     b.HasOne("FoodInfo.Service.Models.Product", "Product")
                         .WithMany("ProductContents")
-                        .HasForeignKey("ProductID");
-                });
-
-            modelBuilder.Entity("FoodInfo.Service.Models.Vote", b =>
-                {
-                    b.HasOne("FoodInfo.Service.Models.Product", "Product")
-                        .WithMany("Votes")
                         .HasForeignKey("ProductID");
                 });
 #pragma warning restore 612, 618

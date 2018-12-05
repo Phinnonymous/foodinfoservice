@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using FoodInfo.Service.Models;
-using System.Net;
-using FoodInfo.Service.Controllers;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Routing;
+﻿using AutoMapper;
 using FoodInfo.Service.DTOs;
-using AutoMapper;
 using FoodInfo.Service.Helper;
+using FoodInfo.Service.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 
 namespace FoodInfo.Service.Controllers
@@ -127,7 +119,7 @@ namespace FoodInfo.Service.Controllers
             }
             catch (Exception ex)
             {
-                  return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
 
             }
 
@@ -155,16 +147,16 @@ namespace FoodInfo.Service.Controllers
                         user.IsModerator = true;
                         user.IsAdmin = false;
 
-                        if(userDTO.ModifiedUserId != null )
-                        { user.ModifiedUserId = userDTO.ModifiedUserId;  }
+                        if (userDTO.ModifiedUserId != null)
+                        { user.ModifiedUserId = userDTO.ModifiedUserId; }
                         else
                         {
                             return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
                         }
                         user.ModifiedDate = DateTime.Now;
-                        
+
                         context.SaveChanges();
-                        
+
                         return apiJsonResponse.ApiOkContentResult(Mapper.Map<ModeratorDTO>(user));
                     }
                 }
@@ -230,7 +222,7 @@ namespace FoodInfo.Service.Controllers
             using (FoodInfoServiceContext foodInfoServiceContext = new FoodInfoServiceContext())
             {
                 var user = foodInfoServiceContext.User.FirstOrDefault();
-                
+
                 if (user == null)
                 {
 
@@ -248,5 +240,4 @@ namespace FoodInfo.Service.Controllers
 
     }
 
-   
 }

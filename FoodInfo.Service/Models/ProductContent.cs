@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FoodInfo.Service.Models
 {
-    public class ProductContent
+    public class ProductContent :Base
     {
 
         public int ID { get; set; }
@@ -18,6 +18,7 @@ namespace FoodInfo.Service.Models
         public string Recommendations { get; set; }
         public string VideoURL { get; set; }
         public virtual Language Language { get; set; }
+        public string Details { get; set; }
 
     }
 

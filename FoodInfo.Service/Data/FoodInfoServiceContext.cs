@@ -24,7 +24,8 @@ namespace FoodInfo.Service.Models
         public DbSet<NutritionFacts> NutritionFacts { get; set; }
         public DbSet<ProductContent> ProductContents { get; set; }
         public DbSet<Error> Errors { get; set; }
-        
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Vote> Votes { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
