@@ -4,14 +4,16 @@ using FoodInfo.Service.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodInfo.Service.Migrations
 {
     [DbContext(typeof(FoodInfoServiceContext))]
-    partial class FoodInfoServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20181205164718_LanguageCodeForProductCatgory adde")]
+    partial class LanguageCodeForProductCatgoryadde
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,21 +106,21 @@ namespace FoodInfo.Service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal?>("Carbohydrate");
+                    b.Property<decimal>("Carbohydrate");
 
-                    b.Property<decimal?>("Energy");
+                    b.Property<decimal>("Energy");
 
-                    b.Property<decimal?>("Fat");
+                    b.Property<decimal>("Fat");
 
-                    b.Property<decimal?>("Fiber");
+                    b.Property<decimal>("Fiber");
 
-                    b.Property<decimal?>("Protein");
+                    b.Property<decimal>("Protein");
 
-                    b.Property<decimal?>("Salt");
+                    b.Property<decimal>("Salt");
 
-                    b.Property<decimal?>("SaturatedFattyAcids");
+                    b.Property<decimal>("SaturatedFattyAcids");
 
-                    b.Property<decimal?>("TransFattyAcids");
+                    b.Property<decimal>("TransFattyAcids");
 
                     b.HasKey("ID");
 
@@ -131,8 +133,7 @@ namespace FoodInfo.Service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BarcodeId")
-                        .IsRequired();
+                    b.Property<int>("BarcodeId");
 
                     b.Property<DateTime>("CreatedDate");
 
@@ -148,7 +149,7 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<int?>("ProductCategoryID");
 
-                    b.Property<int?>("ProductGroupId");
+                    b.Property<int>("ProductGroupId");
 
                     b.Property<string>("ProductName");
 
@@ -271,8 +272,8 @@ namespace FoodInfo.Service.Migrations
                     b.ToTable("User");
 
                     b.HasData(
-                        new { ID = 1, CreatedDate = new DateTime(2018, 12, 6, 1, 4, 57, 69, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Cankurtaran", Username = "fatih" },
-                        new { ID = 2, CreatedDate = new DateTime(2018, 12, 6, 1, 4, 57, 71, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Kocadas", Username = "yusuf" }
+                        new { ID = 1, CreatedDate = new DateTime(2018, 12, 5, 17, 47, 18, 145, DateTimeKind.Local), Email = "f@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Fatih", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Cankurtaran", Username = "fatih" },
+                        new { ID = 2, CreatedDate = new DateTime(2018, 12, 5, 17, 47, 18, 147, DateTimeKind.Local), Email = "y@gmail.com", IsAdmin = false, IsDeleted = false, IsModerator = false, Name = "Yusuf", Password = "b41af4c157c87c6c8278ec45127c235fb5c991288e6a07da88b87549076acf02", Surname = "Kocadas", Username = "yusuf" }
                     );
                 });
 
@@ -294,7 +295,7 @@ namespace FoodInfo.Service.Migrations
 
                     b.Property<int?>("ProductID");
 
-                    b.Property<int?>("UserVote");
+                    b.Property<int>("UserVote");
 
                     b.HasKey("ID");
 

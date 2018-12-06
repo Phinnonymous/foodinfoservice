@@ -34,7 +34,7 @@ namespace FoodInfo.Service.Controllers
                 {
 
                    var languages = context.Languages.Where(x => x.IsDeleted == false).ToList();
-                    if (languages != null)  
+                    if (languages != null && languages.Count != 0)  
                     {
                         List<LanguageDTO> languageDTOs = new List<LanguageDTO>();
                         
@@ -62,5 +62,6 @@ namespace FoodInfo.Service.Controllers
                 return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage));
             }
         }
+       
     }
 }

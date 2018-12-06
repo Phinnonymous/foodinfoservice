@@ -18,6 +18,8 @@ namespace FoodInfo.Service.Helper
 
         #region System
         public static string SysErrorMessage { get; set; } = "SYS001";
+        public static string ProivdeModifiedUserId { get; set; } = "SYS002";
+        public static string ProvideACreatedUserId { get; set; } = "SYS003";
         #endregion
         #region User
         public static string UserNotFoundError { get; set; } = "USR001";
@@ -28,7 +30,13 @@ namespace FoodInfo.Service.Helper
         public static string NoLanguageFound { get; set; } = "LNG001";
 
         #endregion
-
+        #region Category
+        public static string NoCategoryFound { get; set; } = "CTG0001";
+        public static string ProvideCategoryName{ get; set; } = "CTG0002";
+        public static string AlreadyACategoryDefinedWithThisName { get; set; } = "CTG0003";
+        public static string ProvideLanguageCodeForCategory { get; set; } = "CTG0004";
+        
+        #endregion
         #endregion
     }
 }

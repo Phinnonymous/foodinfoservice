@@ -14,6 +14,7 @@ namespace FoodInfo.Service.Models
         public string NativeLanguageName { get; set; }
         //
         public ICollection<ProductContent> ProductContents { get; set; }
+
         
     }
 }
