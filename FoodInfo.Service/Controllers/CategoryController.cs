@@ -55,7 +55,7 @@ namespace FoodInfo.Service.Controllers
                 }
                 else
                 {
-                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideLanguageCodeForCategory);
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideLanguageCode);
                 }
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace FoodInfo.Service.Controllers
                                 }
                                 else
                                 {
-                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideLanguageCodeForCategory);
+                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideLanguageCode);
                                 }
                             }
                             else

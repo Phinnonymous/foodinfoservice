@@ -34,8 +34,12 @@ namespace FoodInfo.Service.Helper
         public static string NoCategoryFound { get; set; } = "CTG0001";
         public static string ProvideCategoryName{ get; set; } = "CTG0002";
         public static string AlreadyACategoryDefinedWithThisName { get; set; } = "CTG0003";
-        public static string ProvideLanguageCodeForCategory { get; set; } = "CTG0004";
-        
+        public static string ProvideLanguageCode { get; set; } = "CTG0004";
+
+        #endregion
+        #region Content
+        public static string BarcodIdRequired { get; set; } = "CNT0001";
+        public static string ExistingContentForProduct { get; set; } = "CTN0002";
         #endregion
         #endregion
     }

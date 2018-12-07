@@ -34,6 +34,8 @@ namespace FoodInfo.Service
                 cfg.CreateMap<LanguageDTO, Language>();
                 cfg.CreateMap<CategoryNameDTO, ProductCategory>();
                 cfg.CreateMap<ProductCategory, CategoryNameDTO>();
+                cfg.CreateMap<ProductContent, ContentDTO>();
+                cfg.CreateMap<ContentDTO, ProductContent>();
 
 
             } ));

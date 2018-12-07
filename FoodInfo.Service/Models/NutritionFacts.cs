@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FoodInfo.Service.Models
 {
-    public class NutritionFacts
+    public class NutritionFacts : Base
     {
         public int ID { get; set; }
         public decimal ? Energy { get; set; }
