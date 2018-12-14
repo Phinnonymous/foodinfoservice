@@ -32,6 +32,13 @@ namespace FoodInfo.Service.Controllers
                         return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNameOrEmailAlreadyExistError);
 
                     }
+                    if (userDTO.Username == string.Empty)
+                    { return apiJsonResponse.ApiBadRequestWithMessage("Username is required"); }
+                    if (userDTO.Email == string.Empty)
+                    { return apiJsonResponse.ApiBadRequestWithMessage("Email is required"); }
+                    if (userDTO.Password == string.Empty)
+                    { return apiJsonResponse.ApiBadRequestWithMessage("Password is required"); }
+
 
                     var hashedPassword = HelperFunctions.ComputeSha256Hash(userDTO.Password);
                     userDTO.Password = hashedPassword;
@@ -45,7 +52,9 @@ namespace FoodInfo.Service.Controllers
                     UserDTO userCredentialsOnSuccess = new UserDTO();
                     userCredentialsOnSuccess.Name = userDTO.Name;
                     userCredentialsOnSuccess.Surname = userDTO.Surname;
+
                     userCredentialsOnSuccess.Username = userDTO.Username;
+
                     userCredentialsOnSuccess.Email = userDTO.Email;
                     return apiJsonResponse.ApiOkContentResult(userCredentialsOnSuccess);
                     //var isExistUsername = foodInfoServiceContext.User.FirstOrDefault(x => x.Username == "Fatihs");
@@ -234,6 +243,115 @@ namespace FoodInfo.Service.Controllers
             }
 
         }
+        [HttpPost]
+        [Route("UpdateEmail")]
+        public IActionResult UpdateEmail(UpdateEmailDTO updateEmailDTO)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    if (context.User.Any(x => x.IsDeleted == false && x.Email == updateEmailDTO.oldEmail))
+                    {
+                        if (context.User.Any(x => x.IsDeleted == false && x.Email == updateEmailDTO.newEmail))
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNameOrEmailAlreadyExistError);
+
+                        }
+                        else
+                        {
+                            var User = context.User.FirstOrDefault(x => x.IsDeleted == false && x.Email == updateEmailDTO.oldEmail);
+                            User.Email = updateEmailDTO.newEmail;
+                            User.ModifiedDate = DateTime.Now;
+                            
+                            context.SaveChanges();
+                            return apiJsonResponse.ApiOkContentResult(updateEmailDTO);
+                        }
+                    }
+                    else
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+                    }
+
+                }
+            }
+            catch
+            { return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage); }
+
+        }
+        [HttpPost]
+        [Route("UpdatePassword")]
+        public IActionResult UpdatePassword (UpdatePasswordDTO updatePasswordDTO)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    if(context.User.Any(x => x.IsDeleted == false && x.Username == updatePasswordDTO.Username))
+                    {
+                        var User = context.User.FirstOrDefault(x => x.IsDeleted == false && x.Username == updatePasswordDTO.Username);
+                        if (updatePasswordDTO.NewPassword != string.Empty)
+                        {
+                            User.Password = HelperFunctions.ComputeSha256Hash(updatePasswordDTO.NewPassword);
+                            User.ModifiedDate = DateTime.Now;
+                            context.SaveChanges();
+                            return apiJsonResponse.ApiOkContentResult(updatePasswordDTO);
+                        }
+                        else
+                        { return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.PasswordRequired); }
+                    }
+                    else
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+                    }
+                }
+            }
+            catch
+            {
+               return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
+
+        [HttpPost]
+        [Route("UpdateNameAndSurname")]
+        public IActionResult UpdateNameAndSurname (UpdateNameAndSurnameDTO updateNameAndSurnameDTO)
+        {
+            var apiJsonResult = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    if(context.User.Any(x => x.Username == updateNameAndSurnameDTO.Username && x.IsDeleted == false))
+                    {
+                        var User = context.User.FirstOrDefault(x => x.Username == updateNameAndSurnameDTO.Username && x.IsDeleted == false);
+
+                        if (updateNameAndSurnameDTO.NewName != string.Empty)
+                        {
+                            User.Name = updateNameAndSurnameDTO.NewName;
+                            User.ModifiedDate = DateTime.Now;
+                        }
+                        if (updateNameAndSurnameDTO.NewSurname != string.Empty)
+                        {
+                            User.Surname = updateNameAndSurnameDTO.NewSurname;
+                            User.ModifiedDate = DateTime.Now;
+                        }
+                        context.SaveChanges();
+                        return apiJsonResult.ApiOkContentResult(updateNameAndSurnameDTO);
+                    }
+                    else
+                    { return apiJsonResult.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError); }
+                }
+            }
+            catch
+            {
+                return apiJsonResult.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+
+        }
+
 
 
 
