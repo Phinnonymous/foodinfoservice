@@ -13,7 +13,7 @@ namespace FoodInfo.Service.Models
         
         //
         //
-        public ICollection<Product> Products { get; set; }
+      //  public ICollection<Product> Products { get; set; }
 
     }
 }

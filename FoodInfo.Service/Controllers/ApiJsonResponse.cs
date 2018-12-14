@@ -21,7 +21,7 @@ namespace FoodInfo.Service.Controllers
 
         }
 
-        public ContentResult ApiOkContentResult(object objectResult)
+        public ContentResult ApiOkContentResult(object objectResult = null)
 
         {
 

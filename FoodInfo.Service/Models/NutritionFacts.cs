@@ -18,6 +18,6 @@ namespace FoodInfo.Service.Models
         public decimal ? Protein { get; set; }
         public decimal ? Salt { get; set; }
 
-        public ICollection<ProductContent> ProductContent { get; set; }
+        //public ICollection<ProductContent> ProductContent { get; set; }
     }
 }

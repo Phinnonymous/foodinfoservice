@@ -13,7 +13,7 @@ namespace FoodInfo.Service.Models
         public string LanguageName { get; set; }
         public string NativeLanguageName { get; set; }
         //
-        public ICollection<ProductContent> ProductContents { get; set; }
+        //public ICollection<ProductContent> ProductContents { get; set; }
 
         
     }

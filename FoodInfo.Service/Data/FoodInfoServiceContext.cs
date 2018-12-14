@@ -54,8 +54,8 @@ namespace FoodInfo.Service.Models
             
 
 
-            modelBuilder.Entity<ProductCategory>()
-                .HasMany(p => p.Products);
+            //modelBuilder.Entity<ProductCategory>()
+            //    .HasMany(p => p.Products);
 
             //modelBuilder.Entity<Error>()
             //    .HasData(

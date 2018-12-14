@@ -14,7 +14,7 @@ namespace FoodInfo.Service.Models
         [Key]
         public int ID { get; set; }
         [Required]
-        public int? BarcodeId { get; set; }
+        public string BarcodeId { get; set; }
         public string ProductName { get; set; }
         public int ? ProductGroupId { get; set; }
         //
@@ -22,12 +22,12 @@ namespace FoodInfo.Service.Models
         public byte [] SecondImage { get; set; }
         public byte [] ThirdImage { get; set; }
 
-        public ICollection<ProductContent> ProductContents { get; set; }
+       // public ICollection<ProductContent> ProductContents { get; set; }
         //
         public virtual ProductCategory ProductCategory { get; set; }
 
-        public ICollection<Comment> Comments{ get; set; }
-        public ICollection<Vote> Votes { get; set; }
+        //public ICollection<Comment> Comments{ get; set; }
+       // public ICollection<Vote> Votes { get; set; }
 
 
 
