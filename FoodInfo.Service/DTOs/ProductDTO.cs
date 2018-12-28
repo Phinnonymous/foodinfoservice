@@ -11,7 +11,7 @@ namespace FoodInfo.Service.DTOs
         
         public int BarcodeId { get; set; }
         public string ProductName { get; set; }
-        public int? ProductGroupId { get; set; }
+        public int ProductGroupId { get; set; }
         //
         public byte[] FirstImage { get; set; }
         public byte[] SecondImage { get; set; }
