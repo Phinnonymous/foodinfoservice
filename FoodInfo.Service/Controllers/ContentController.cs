@@ -5,6 +5,7 @@ using FoodInfo.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FoodInfo.Service.Controllers
@@ -97,7 +98,43 @@ namespace FoodInfo.Service.Controllers
                                     x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId)
                                 .Include(m => m.NutritionFact)
                                 .Include(m => m.Product).FirstOrDefault();
-                            return apiJsonResponse.ApiOkContentResult(Mapper.Map<ContentDTO>(product));
+                            ContentDTO contentDTO = Mapper.Map<ContentDTO>(product);
+                            try
+                            { var comments = context.Comments.Where(x => x.ProductContent.ID == product.ID && x.IsDeleted == false).ToList();
+                                if (comments != null)
+                                { contentDTO.Comments = Mapper.Map<List<CommentDTO>>(comments); }
+                            }
+                           catch
+                            {
+
+                            }
+                           
+                            
+                            int totalVotes = context.Votes.Count(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId); 
+                            if(totalVotes == 0 )
+                            {
+                                contentDTO.AverageVote = 2.5M;
+                            }
+                            else
+                            {
+                                int count = 0 ; 
+                                foreach (var item in context.Votes.Where(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
+                                {
+                                    if (item.UserVote != null)
+                                    {
+                                        count += (int)item.UserVote;
+                                    }
+                                }
+                                if (count != 0 )
+                                { contentDTO.AverageVote = count / (decimal)totalVotes; }
+                                else
+                                {
+                                    contentDTO.AverageVote = 2.5M;
+                                }
+                            }
+
+                            
+                            return apiJsonResponse.ApiOkContentResult(contentDTO);
                         }
                         else
                         {

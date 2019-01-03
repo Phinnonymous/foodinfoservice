@@ -44,9 +44,12 @@ namespace FoodInfo.Service.Helper
         public static string BarcodeIdOrLanguageCodeDoesNotFound { get; set; } = "CTN0003";
         public static string ProvideAtLeastOneImage { get; set; } = "CTN0004";
         public static string ProductNotFound { get; set; } = "CTN0005";
-
+        public static string ProductContentIdRequired { get; set; } = "CTN0006";
         #endregion
-
+        #region Comment
+        public static string CommentCanNotBeEmpty { get; set; } = "CMT0001";
+        public static string CommentNotFound { get; set; } = "CMT0002";
+        #endregion
         #endregion
     }
 }

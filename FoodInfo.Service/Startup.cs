@@ -36,6 +36,9 @@ namespace FoodInfo.Service
                 cfg.CreateMap<ProductCategory, CategoryNameDTO>();
                 cfg.CreateMap<ProductContent, ContentDTO>();
                 cfg.CreateMap<ContentDTO, ProductContent>();
+                cfg.CreateMap<ContentDTO, Comment>();
+                cfg.CreateMap<ContentDTO, Vote>();
+                
 
 
             } ));

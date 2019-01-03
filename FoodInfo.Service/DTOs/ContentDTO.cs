@@ -18,6 +18,8 @@ namespace FoodInfo.Service.DTOs
         public string VideoURL { get; set; }
         public virtual Language Language { get; set; }
         public string Details { get; set; }
+        public virtual List<CommentDTO> Comments { get; set; }
+        public decimal AverageVote { get; set; }
 
     }
 }

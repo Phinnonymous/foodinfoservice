@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using FoodInfo.Service.DTOs;
+using FoodInfo.Service.Helper;
+using FoodInfo.Service.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using FoodInfo.Service.Models;
-using System.Net;
-using FoodInfo.Service.Controllers;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Routing;
-using FoodInfo.Service.DTOs;
-using AutoMapper;
-using FoodInfo.Service.Helper;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace FoodInfo.Service.Controllers
 {
@@ -33,12 +29,12 @@ namespace FoodInfo.Service.Controllers
                 using (FoodInfoServiceContext context = new FoodInfoServiceContext())
                 {
 
-                   var languages = context.Languages.Where(x => x.IsDeleted == false).ToList();
-                    if (languages != null && languages.Count != 0)  
+                    var languages = context.Languages.Where(x => x.IsDeleted == false).ToList();
+                    if (languages != null && languages.Count != 0)
                     {
                         List<LanguageDTO> languageDTOs = new List<LanguageDTO>();
-                        
-                        foreach(var item in languages)
+
+                        foreach (var item in languages)
                         {
 
                             languageDTOs.Add(Mapper.Map<LanguageDTO>(item));
@@ -47,14 +43,17 @@ namespace FoodInfo.Service.Controllers
                         {
                             return apiJsonResponse.ApiOkContentResult(languageDTOs);
                         }
-                        else return BadRequest(new ApiBadRequestWithMessage(PublicConstants.NoLanguageFound));
+                        else
+                        {
+                            return BadRequest(new ApiBadRequestWithMessage(PublicConstants.NoLanguageFound));
+                        }
                     }
                     else
                     {
                         return BadRequest(new ApiBadRequestWithMessage(PublicConstants.NoLanguageFound));
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -62,6 +61,49 @@ namespace FoodInfo.Service.Controllers
                 return BadRequest(new ApiBadRequestWithMessage(PublicConstants.SysErrorMessage));
             }
         }
-       
+        [HttpPost]
+        [Route("GetLanguageListOfProductByBarcodeId")]
+        public IActionResult GetLanguageListOfProductByBarcodeId(BarcodeDTO barcodeDTO)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                if (barcodeDTO != null)
+                {
+                    using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                    {
+                        var languageList = context.ProductContents.Where(x => x.Product.BarcodeId == barcodeDTO.BarcodeId)
+                            .Include(x => x.Language).ToList();
+                        List<LanguageDTO> languageDTO = new List<LanguageDTO>();
+                        if (languageList != null)
+                        {
+                            foreach (var item in languageList)
+                            {
+                                languageDTO.Add(Mapper.Map<LanguageDTO>(item.Language));
+                                var l = languageDTO;
+
+                            }
+                            return apiJsonResponse.ApiOkContentResult(languageDTO);
+                        }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.NoLanguageFound);
+                        }
+                   
+                    }
+
+                }
+                else
+                {
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.BarcodIdRequired);
+                }
+            }
+            catch
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
+
+
     }
 }

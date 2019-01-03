@@ -4,14 +4,16 @@ using FoodInfo.Service.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodInfo.Service.Migrations
 {
     [DbContext(typeof(FoodInfoServiceContext))]
-    partial class FoodInfoServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20190102232411_commentChanged")]
+    partial class commentChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
