@@ -24,7 +24,6 @@ namespace FoodInfo.Service.Helper
         #region User
         public static string UserNotFoundError { get; set; } = "USR001";
         public static string ModifiedUserIdRequired { get; set; } = "USR002";
-        
 
         #endregion
         #region Language

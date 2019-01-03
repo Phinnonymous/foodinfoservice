@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FoodInfo.Service.DTOs;
+﻿using FoodInfo.Service.DTOs;
 using FoodInfo.Service.Helper;
 using FoodInfo.Service.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -42,11 +41,7 @@ namespace FoodInfo.Service.Controllers
                     }
                     if (HelperFunctions.ComputeSha256Hash(loginDTO.Password) == user.Password)
                     {
-                        var result = Mapper.Map<LoginDTO>(user);
-                        result.Password = loginDTO.Password;
-
-
-                        return apiJsonResponse.ApiOkContentResult(result);
+                        return apiJsonResponse.ApiOkContentResult(loginDTO);
                     }
                     else
                     {

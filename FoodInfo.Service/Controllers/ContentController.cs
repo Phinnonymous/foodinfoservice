@@ -153,6 +153,66 @@ namespace FoodInfo.Service.Controllers
             }
         }
 
-        
+        [HttpPost]
+        [Route("SetInitialImagesByBarcodeId")]
+        public IActionResult SetInitialImagesByBarcodeId(ImageDTO imageDto)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                if (imageDto != null)
+                {
+                    using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                    {
+                        if (context.Products.Any(x => x.BarcodeId == imageDto.BarcodeId && x.IsDeleted == false))
+                        {
+                            var product = context.Products.FirstOrDefault(x =>
+                                x.BarcodeId == imageDto.BarcodeId && x.IsDeleted == false);
+                            if (imageDto.FirstImage == null && imageDto.SecondImage == null && imageDto.ThirdImage == null)
+
+                            {
+                                return
+                                    apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideAtLeastOneImage);
+                            }
+
+                            if (imageDto.FirstImage != null)
+                            {
+                                product.FirstImage = imageDto.FirstImage;
+                            }
+
+                            if (imageDto.SecondImage != null)
+                            {
+                                product.SecondImage = imageDto.SecondImage;
+                            }
+
+                            if (imageDto.ThirdImage != null)
+                            {
+                                product.ThirdImage = imageDto.ThirdImage;
+                            }
+
+                            context.SaveChanges();
+
+                            return apiJsonResponse.ApiOkContentResult();
+
+
+                        }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductNotFound);
+                        }
+
+                    }
+                }
+                else
+                {
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
     }
 }
