@@ -41,6 +41,10 @@ namespace FoodInfo.Service.Controllers
                     }
                     if (HelperFunctions.ComputeSha256Hash(loginDTO.Password) == user.Password)
                     {
+
+                        
+                        loginDTO.Email = user.Email;
+                        loginDTO.Username = user.Username;
                         return apiJsonResponse.ApiOkContentResult(loginDTO);
                     }
                     else
