@@ -15,11 +15,11 @@ namespace FoodInfo.Service.DTOs
 
         //Proje açılışında diger isminde category olustur
 
-        public int?  ProductGroupId { get; set; } 
+        public int? ProductGroupId { get; set; } = 1;
         //
-        public byte[] FirstImage { get; set; }
-        public byte[] SecondImage { get; set; }
-        public byte[] ThirdImage { get; set; }
+        public byte[] FirstImage { get; set; } = null;
+        public byte[] SecondImage { get; set; } = null;
+        public byte[] ThirdImage { get; set; } = null;
 
         
        // public ICollection<ProductContent> ProductContents { get; set; }
