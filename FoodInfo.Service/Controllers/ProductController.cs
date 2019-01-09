@@ -32,15 +32,58 @@ namespace FoodInfo.Service.Controllers
                 {
                     if (productDTO != null)
                     {
-                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
 
-                        if (productDTO.BarcodeId != null)
+                        if (productDTO.BarcodeId == string.Empty && productDTO.ProductName == string.Empty )
 
                         {
                             return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
 
                         }
+                        else
+                        {
+                            if (!context.Products.Any(x => x.BarcodeId == productDTO.BarcodeId))
+                            {
+                                var product = new Product();
+
+                                //product.BarcodeId = productDTO.BarcodeId;
+                                //product.ProductName = productDTO.ProductName;
+                                //product.ProductCategory = productDTO.ProductCategory;
+                                //product.CreatedUserId = productDTO.CreatedUserId;
+                                //if(productDTO.FirstImage != null)
+                                //{
+                                //    product.FirstImage = productDTO.FirstImage;
+
+                                //}
+                                //if (productDTO.SecondImage != null)
+                                //{
+                                //    product.SecondImage = productDTO.SecondImage;
+
+                                //}
+                                //if (productDTO.ThirdImage != null)
+                                //{
+                                //    product.ThirdImage = productDTO.ThirdImage;
+
+                                //}
+                                
+                                product = Mapper.Map<Product> (productDTO);
+                                product.ProductCategory = context.ProductCategories.Where(x => x.ID == productDTO.Id).FirstOrDefault();
+                                
+                                context.Add(product);
+                                context.SaveChanges();
+                                return apiJsonResponse.ApiOkContentResult(productDTO);
+                            }
+                            else
+                            {
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+                            }
+
+                        }
+                        
+                        
+
+                        
                     }
+
                     else
                     {
                         return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);

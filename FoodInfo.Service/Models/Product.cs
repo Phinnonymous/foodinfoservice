@@ -16,7 +16,7 @@ namespace FoodInfo.Service.Models
         [Required]
         public string BarcodeId { get; set; }
         public string ProductName { get; set; }
-        public int ? ProductGroupId { get; set; }
+        public int? ProductGroupId { get; set; } = 1;
         //
         public byte  [] FirstImage { get; set; }
         public byte [] SecondImage { get; set; }
