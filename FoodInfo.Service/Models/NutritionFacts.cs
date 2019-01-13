@@ -8,6 +8,8 @@ namespace FoodInfo.Service.Models
     public class NutritionFacts : Base
     {
         public int ID { get; set; }
+        public string BarcodeId { get; set; } 
+        public string LanguageCode { get; set; }
         public decimal ? Energy { get; set; }
         public decimal ? Fat { get; set; }
         public decimal ? SaturatedFattyAcids { get; set; }

@@ -8,56 +8,76 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FoodInfo.Service.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ContentController : ControllerBase
-    {
-
-        [HttpPost]
-        [Route("CreateContentOfProduct")]
-        public IActionResult CreateContentOfProduct(ContentDTO contentDTO)
-        {
-            var apiJsonResponse = new ApiJsonResponse();
-            try
-            {
-                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
-                {
-                    if (contentDTO != null)
-                    {
+namespace FoodInfo.Service.Controllers                                                                                     
+{                                                                                                                          
+    [Route("api/[controller]")]                                                                                            
+    [ApiController]                                                                                                        
+    public class ContentController : ControllerBase                                                                    
+    {                                                                                                                      
+                                                                                                                           
+        [HttpPost]                                                                                                         
+        [Route("CreateContentOfProduct")]                                                                                  
+        public IActionResult CreateContentOfProduct(ContentDTO contentDTO)                                                 
+        {                                                                                                                  
+            var apiJsonResponse = new ApiJsonResponse();                                                                   
+            try                                                                                                            
+            {                                                                                                              
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())                                      
+                {                                                                                                          
+                    if (contentDTO != null)                                                                                
+                    {                                                                                                      
                         if (contentDTO.Product.BarcodeId != null)
                         {
 
                             if (contentDTO.CreatedUserId != null)
                             {
-                                if (context.Products.Any(x => x.BarcodeId == contentDTO.Product.BarcodeId && x.IsDeleted == false))
+                                using (var transaction = context.Database.BeginTransaction())
                                 {
-                                    contentDTO.Product.ID = context.Products.FirstOrDefault(x => x.BarcodeId == contentDTO.Product.BarcodeId && x.IsDeleted == false).ID;
-                                }
+                                    if (context.Products.Any(x => x.BarcodeId == contentDTO.Product.BarcodeId && x.IsDeleted == false))
+                                    {
+                                        contentDTO.Product.ID = context.Products.FirstOrDefault(x => x.BarcodeId == contentDTO.Product.BarcodeId && x.IsDeleted == false).ID;
 
-                                else
-                                {
-                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.BarcodIdRequired);
-                                }
-                                if (context.Languages.Any(x => x.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted == false))
-                                {
-                                    contentDTO.Language.ID = context.Languages.FirstOrDefault(x => x.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted == false).ID;
-                                }
-                                else
+                                    }
 
-                                {
-                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideLanguageCode);
-                                }
-                                if (context.ProductContents.Any(x => x.Product.ID == contentDTO.Product.ID && x.IsDeleted == false && x.Language.ID == contentDTO.Language.ID))
-                                {
-                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ExistingContentForProduct);
-                                }
-                                contentDTO.NutritionFact.ID = context.NutritionFacts.FirstOrDefault(x => x.ID == contentDTO.NutritionFact.ID && x.IsDeleted == false).ID;
+                                    else
+                                    {
+                                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.BarcodIdRequired);
+                                    }
+                                    if (context.Languages.Any(x => x.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted == false))
+                                    {
+                                        contentDTO.Language.ID = context.Languages.FirstOrDefault(x => x.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted == false).ID;
+                                    }
+                                    else
 
-                                var content = context.ProductContents.Add(Mapper.Map<ProductContent>(contentDTO));
-                                context.SaveChanges();
-                                return apiJsonResponse.ApiOkContentResult(Mapper.Map<ProductContent>(contentDTO));
+                                    {
+                                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProvideLanguageCode);
+                                    }
+                                    if (context.ProductContents.Any(x => x.Product.ID == contentDTO.Product.ID && x.IsDeleted == false && x.Language.ID == contentDTO.Language.ID))
+                                    {
+                                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ExistingContentForProduct);
+                                    }
+                                    // contentDTO.NutritionFact.ID = context.NutritionFacts.FirstOrDefault(x => x.ID == contentDTO.NutritionFact.ID && x.IsDeleted == false).ID;
+
+                                    var nutritionFacts = new NutritionFacts();
+
+                                    nutritionFacts = Mapper.Map<NutritionFacts>(contentDTO.NutritionFact);
+                                    nutritionFacts.BarcodeId = contentDTO.Product.BarcodeId;
+                                    nutritionFacts.CreatedUserId = contentDTO.CreatedUserId;
+                                    nutritionFacts.LanguageCode = contentDTO.Language.LanguageCode;
+
+                                    context.Add(nutritionFacts);
+                                    context.SaveChanges();
+                                    contentDTO.NutritionFact.ID = context.NutritionFacts.Where(x => x.BarcodeId == contentDTO.Product.BarcodeId && x.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted == false).FirstOrDefault().ID;
+
+                                    var content = context.ProductContents.Add(Mapper.Map<ProductContent>(contentDTO));
+
+                                    context.SaveChanges();
+
+
+
+                                    transaction.Commit();
+                                    return apiJsonResponse.ApiOkContentResult(Mapper.Map<ProductContent>(contentDTO));
+                                }
                             }
                             else
                             {
@@ -100,24 +120,25 @@ namespace FoodInfo.Service.Controllers
                                 .Include(m => m.Product).FirstOrDefault();
                             ContentDTO contentDTO = Mapper.Map<ContentDTO>(product);
                             try
-                            { var comments = context.Comments.Where(x => x.ProductContent.ID == product.ID && x.IsDeleted == false).ToList();
+                            {
+                                var comments = context.Comments.Where(x => x.ProductContent.ID == product.ID && x.IsDeleted == false).ToList();
                                 if (comments != null)
                                 { contentDTO.Comments = Mapper.Map<List<CommentDTO>>(comments); }
                             }
-                           catch
+                            catch
                             {
 
                             }
-                           
-                            
-                            int totalVotes = context.Votes.Count(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId); 
-                            if(totalVotes == 0 )
+
+
+                            int totalVotes = context.Votes.Count(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId);
+                            if (totalVotes == 0)
                             {
                                 contentDTO.AverageVote = 2.5M;
                             }
                             else
                             {
-                                int count = 0 ; 
+                                int count = 0;
                                 foreach (var item in context.Votes.Where(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
                                 {
                                     if (item.UserVote != null)
@@ -125,7 +146,7 @@ namespace FoodInfo.Service.Controllers
                                         count += (int)item.UserVote;
                                     }
                                 }
-                                if (count != 0 )
+                                if (count != 0)
                                 { contentDTO.AverageVote = count / (decimal)totalVotes; }
                                 else
                                 {
@@ -133,7 +154,7 @@ namespace FoodInfo.Service.Controllers
                                 }
                             }
 
-                            
+
                             return apiJsonResponse.ApiOkContentResult(contentDTO);
                         }
                         else

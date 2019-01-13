@@ -49,6 +49,9 @@ namespace FoodInfo.Service.Helper
         public static string CommentCanNotBeEmpty { get; set; } = "CMT0001";
         public static string CommentNotFound { get; set; } = "CMT0002";
         #endregion
+        #region Vote
+        public static string UserAlreadyVoteThisProduct { get; set; } = "VTE0001";
+        #endregion
         #endregion
     }
 }
