@@ -41,6 +41,8 @@ namespace FoodInfo.Service
                 cfg.CreateMap<Product, ProductDTO>();
                 cfg.CreateMap<ProductCategory, ProductCategoryDTO>();
                 cfg.CreateMap<ProductCategoryDTO, ProductCategory>();
+                cfg.CreateMap<SearchByNameDTO, Product>();
+                cfg.CreateMap<Product, SearchByNameDTO>();  
 ;                
 
 

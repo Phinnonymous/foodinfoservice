@@ -4,7 +4,9 @@ using FoodInfo.Service.Helper;
 using FoodInfo.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+
 
 namespace FoodInfo.Service.Controllers
 {
@@ -36,14 +38,14 @@ namespace FoodInfo.Service.Controllers
                             if (!context.Products.Any(x => x.BarcodeId == productDTO.BarcodeId && x.IsDeleted == false))
                             {
                                 var product = new Product();
-                                
+
                                 //product.BarcodeId = productDTO.BarcodeId;
                                 //product.ProductName = productDTO.ProductName;
                                 //product.ProductCategory = productDTO.ProductCategory;
                                 //product.CreatedUserId = productDTO.CreatedUserId;
-                                
-                               
-                                
+
+
+
 
                                 product = Mapper.Map<Product>(productDTO);
                                 if (productDTO.FirstImage != null)
@@ -73,7 +75,7 @@ namespace FoodInfo.Service.Controllers
                                 {
                                     product.ThirdImage = null;
                                 }
-                                if(!context.ProductCategories.Any(x => x.ID == productDTO.ProductCategory.ID && x.IsDeleted == false ))
+                                if (!context.ProductCategories.Any(x => x.ID == productDTO.ProductCategory.ID && x.IsDeleted == false))
                                 {
                                     return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.NoCategoryFound);
                                 }
@@ -123,7 +125,7 @@ namespace FoodInfo.Service.Controllers
 
                         {
 
-                            var barcodeIdAndNameDTO= new BarcodeIdAndNameDTO();
+                            var barcodeIdAndNameDTO = new BarcodeIdAndNameDTO();
                             barcodeIdAndNameDTO.BarcodeId = barcodeDTO.BarcodeId;
                             barcodeIdAndNameDTO.ProductName = context.Products.FirstOrDefault(x => x.BarcodeId == barcodeIdAndNameDTO.BarcodeId && x.IsDeleted == false).ProductName;
 
@@ -136,8 +138,8 @@ namespace FoodInfo.Service.Controllers
                         }
                     }
 
-                    
-                    
+
+
                 }
                 else
                 {
@@ -151,5 +153,68 @@ namespace FoodInfo.Service.Controllers
 
             }
         }
+        [HttpPost]
+        [Route("SearchProductByName")]
+        public IActionResult SearchProductByName(string productName)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+
+                if (productName != string.Empty)
+                {
+                    using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                    {
+                        if (productName.Length >= 3)
+                        {
+                            List<SearchByNameDTO> searchByNameDTOs = new List<SearchByNameDTO>();
+                            try
+                            {
+                                List<Product> products = context.Products.Where(x => x.ProductName.Contains(productName) && x.IsDeleted == false).ToList();
+
+                                if(products.Count ==0 )
+                                {
+                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductNotFound);
+                                }
+                                foreach (var item in products)
+                                {
+                                    searchByNameDTOs.Add(Mapper.Map<SearchByNameDTO>(item));
+
+                                }
+                                
+                                return apiJsonResponse.ApiOkContentResult(searchByNameDTOs);
+                            }
+                            catch
+                            {
+
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductNotFound);
+                            }
+
+
+
+
+
+
+
+                        }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductNotFound);
+
+                        }
+                    }
+                   
+                }
+                else
+                {
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+                }
+            }
+            catch (Exception)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
+
     }
 }

@@ -147,7 +147,7 @@ namespace FoodInfo.Service.Controllers
                                     }
                                 }
                                 if (count != 0)
-                                { contentDTO.AverageVote = count / (decimal)totalVotes; }
+                                { contentDTO.AverageVote = decimal.Round((count / (decimal)totalVotes),2); }
                                 else
                                 {
                                     contentDTO.AverageVote = 2.5M;
