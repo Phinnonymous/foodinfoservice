@@ -8,24 +8,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FoodInfo.Service.Controllers                                                                                     
-{                                                                                                                          
-    [Route("api/[controller]")]                                                                                            
-    [ApiController]                                                                                                        
-    public class ContentController : ControllerBase                                                                    
-    {                                                                                                                      
-                                                                                                                           
-        [HttpPost]                                                                                                         
-        [Route("CreateContentOfProduct")]                                                                                  
-        public IActionResult CreateContentOfProduct(ContentDTO contentDTO)                                                 
-        {                                                                                                                  
-            var apiJsonResponse = new ApiJsonResponse();                                                                   
-            try                                                                                                            
-            {                                                                                                              
-                using (FoodInfoServiceContext context = new FoodInfoServiceContext())                                      
-                {                                                                                                          
-                    if (contentDTO != null)                                                                                
-                    {                                                                                                      
+namespace FoodInfo.Service.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ContentController : ControllerBase
+    {
+
+        [HttpPost]
+        [Route("CreateContentOfProduct")]
+        public IActionResult CreateContentOfProduct(ContentDTO contentDTO)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    if (contentDTO != null)
+                    {
                         if (contentDTO.Product.BarcodeId != null)
                         {
 
@@ -111,55 +111,94 @@ namespace FoodInfo.Service.Controllers
                 {
                     if (languageAndProductDTO.LanguageCode != null)
                     {
-                        if (context.ProductContents.Any(x => x.Language.LanguageCode == languageAndProductDTO.LanguageCode && x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
+                        if (context.Products.Any(x => x.BarcodeId == languageAndProductDTO.BarcodeId))
                         {
-                            var product = context.ProductContents.Where(x =>
-                                    x.Language.LanguageCode == languageAndProductDTO.LanguageCode &&
-                                    x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId)
-                                .Include(m => m.NutritionFact)
-                                .Include(m => m.Product).FirstOrDefault();
-                            ContentDTO contentDTO = Mapper.Map<ContentDTO>(product);
-                            try
+                            if (context.ProductContents.Any(x => x.Language.LanguageCode == languageAndProductDTO.LanguageCode && x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
                             {
-                                var comments = context.Comments.Where(x => x.ProductContent.ID == product.ID && x.IsDeleted == false).ToList();
-                                if (comments != null)
-                                { contentDTO.Comments = Mapper.Map<List<CommentDTO>>(comments); }
-                            }
-                            catch
-                            {
-
-                            }
-
-
-                            int totalVotes = context.Votes.Count(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId);
-                            if (totalVotes == 0)
-                            {
-                                contentDTO.AverageVote = 2.5M;
-                            }
-                            else
-                            {
-                                int count = 0;
-                                foreach (var item in context.Votes.Where(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
+                                var product = context.ProductContents.Where(x =>
+                                        x.Language.LanguageCode == languageAndProductDTO.LanguageCode &&
+                                        x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId)
+                                    .Include(m => m.NutritionFact)
+                                    .Include(m => m.Product).FirstOrDefault();
+                                ContentDTO contentDTO = Mapper.Map<ContentDTO>(product);
+                                try
                                 {
-                                    if (item.UserVote != null)
+                                    var comments = context.Comments.Where(x => x.ProductContent.ID == product.ID && x.IsDeleted == false).ToList();
+
+                                    if (comments != null)
                                     {
-                                        count += (int)item.UserVote;
+
+                                        List<CommentDTO> commentDTOs = new List<CommentDTO>();
+                                        // contentDTO.Comments = Mapper.Map<List<CommentDTO>>(comments);
+                                        int i = 0; 
+                                        foreach (var item in comments)
+                                        {
+
+                                            var commentDTO = new CommentDTO();
+                                            var temp = context.User.Where(x => x.ID == item.CreatedUserId).FirstOrDefault();
+                                            commentDTO.CreatedDate = item.CreatedDate;
+                                            commentDTO.CreatedUserId = item.CreatedUserId;
+                                            commentDTO.Name = temp.Name;
+                                            commentDTO.Surname = temp.Surname;
+                                            commentDTO.Username = temp.Username;
+                                            commentDTO.UserComment = item.UserComment;
+                                            commentDTO.ProductContentId = item.ProductContent.ID;
+                                            commentDTO.ModifiedDate = item.ModifiedDate;
+                                            commentDTO.ModifiedUserId = item.ModifiedUserId;
+                                           
+                                            
+
+                                            commentDTOs.Add(commentDTO);
+
+                                            
+
+                                        }
+
+                                        contentDTO.Comments = commentDTOs; 
                                     }
+
+
                                 }
-                                if (count != 0)
-                                { contentDTO.AverageVote = decimal.Round((count / (decimal)totalVotes),2); }
-                                else
+                                catch
+                                {
+
+                                }
+
+
+                                int totalVotes = context.Votes.Count(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId);
+                                if (totalVotes == 0)
                                 {
                                     contentDTO.AverageVote = 2.5M;
                                 }
+                                else
+                                {
+                                    int count = 0;
+                                    foreach (var item in context.Votes.Where(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
+                                    {
+                                        if (item.UserVote != null)
+                                        {
+                                            count += (int)item.UserVote;
+                                        }
+                                    }
+                                    if (count != 0)
+                                    { contentDTO.AverageVote = decimal.Round((count / (decimal)totalVotes), 2); }
+                                    else
+                                    {
+                                        contentDTO.AverageVote = 2.5M;
+                                    }
+                                }
+
+
+                                return apiJsonResponse.ApiOkContentResult(contentDTO);
                             }
-
-
-                            return apiJsonResponse.ApiOkContentResult(contentDTO);
+                            else
+                            {
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.BarcodeIdOrLanguageCodeDoesNotFound);
+                            }
                         }
                         else
                         {
-                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.BarcodeIdOrLanguageCodeDoesNotFound);
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductDoesNotFound);
                         }
                     }
                     else

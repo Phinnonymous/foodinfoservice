@@ -28,28 +28,27 @@ namespace FoodInfo.Service.Controllers
                     {
                         using (FoodInfoServiceContext context = new FoodInfoServiceContext())
                         {
-                            if (context.Products.Any(x => x.BarcodeId == voteDTO.BarcodeID && x.IsDeleted== false))
+                            if (context.Products.Any(x => x.BarcodeId == voteDTO.BarcodeID && x.IsDeleted == false))
                             {
+                                var vote = new Vote();
+                                vote.Product = context.Products.Where(x => x.BarcodeId == voteDTO.BarcodeID && x.IsDeleted == false).FirstOrDefault();
 
+                                if (context.Votes.Any(x => x.CreatedUserId == voteDTO.CreatedUserId && x.Product.ID == vote.Product.ID && vote.IsDeleted == false))
                                 {
-                                    var vote = new Vote();
-                                    vote.Product = context.Products.Where(x => x.BarcodeId == voteDTO.BarcodeID && x.IsDeleted == false).FirstOrDefault();
 
-                                    if(context.Votes.Any(x =>x.CreatedUserId== voteDTO.CreatedUserId && x.Product.ID == vote.Product.ID && vote.IsDeleted == false))
-                                    {
-
-                                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserAlreadyVoteThisProduct);
-                                    }
-
-
-                                    vote.UserVote = voteDTO.UserVote;
-                                    vote.CreatedUserId = voteDTO.CreatedUserId;
-
-                                    context.Add(vote);
-                                    context.SaveChanges();
-                                    return apiJsonResponse.ApiOkContentResult(voteDTO);
-
+                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserAlreadyVoteThisProduct);
                                 }
+
+
+                                vote.UserVote = voteDTO.UserVote;
+                                vote.CreatedUserId = voteDTO.CreatedUserId;
+
+                                context.Add(vote);
+                                context.SaveChanges();
+                                return apiJsonResponse.ApiOkContentResult(voteDTO);
+
+
+
                             }
                             else
                             {

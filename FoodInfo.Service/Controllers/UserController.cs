@@ -5,6 +5,7 @@ using FoodInfo.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 
 namespace FoodInfo.Service.Controllers
@@ -210,6 +211,84 @@ namespace FoodInfo.Service.Controllers
                 return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
             }
         }
+
+        [HttpPost]
+        [Route("GetAllUsersOrderByCreatedDate")]
+        public IActionResult GetAllUsersOrderByCreatedDate()
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                  var users =   context.User.Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedDate).ToList();
+
+                    List<UserDTO> userList = new List<UserDTO>();
+                    if (users.Count > 0)
+                    {
+                        foreach (var item in users)
+                        {
+                            item.Password = null;
+                            userList.Add(Mapper.Map<UserDTO>(item));
+                            
+                        }
+
+                        return apiJsonResponse.ApiOkContentResult(userList);
+                    }
+                    else
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+                    }
+                }
+                
+            }
+            catch
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+            }
+        }
+
+
+        [HttpPost]
+        [Route("GetAllUsersOrderByName")]
+        public IActionResult GetAllUsersOrderByName()
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var users = context.User.Where(x => x.IsDeleted == false).OrderBy(x => x.Username).ToList();
+
+                    List<UserDTO> userList = new List<UserDTO>();
+                    if (users.Count > 0)
+                    {
+                        foreach (var item in users)
+                        {
+                            item.Password = null;
+                            userList.Add(Mapper.Map<UserDTO>(item));
+
+                        }
+
+                        return apiJsonResponse.ApiOkContentResult(userList);
+                    }
+                    else
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+                    }
+                }
+
+            }
+            catch
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+            }
+        }
+
+
+
 
         [HttpGet]
         [Route("GetFirstUser")]

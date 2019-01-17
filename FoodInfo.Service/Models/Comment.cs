@@ -13,6 +13,8 @@ namespace FoodInfo.Service.Models
     {
         public int ID { get; set; }
         public string UserComment { get; set; }
+         
+        
         public virtual ProductContent ProductContent{ get; set; }
 
     }

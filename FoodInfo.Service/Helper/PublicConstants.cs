@@ -52,6 +52,10 @@ namespace FoodInfo.Service.Helper
         #region Vote
         public static string UserAlreadyVoteThisProduct { get; set; } = "VTE0001";
         #endregion
+        #region Product
+        public static string ProductDoesNotFound { get; set; } = "PRD0001";
+
+        #endregion
         #endregion
     }
 }

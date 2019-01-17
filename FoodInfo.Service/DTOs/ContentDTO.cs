@@ -21,5 +21,7 @@ namespace FoodInfo.Service.DTOs
         public virtual List<CommentDTO> Comments { get; set; }
         public decimal AverageVote { get; set; }
 
+        public virtual List<VoteDTO> Votes { get; set; }
+
     }
 }

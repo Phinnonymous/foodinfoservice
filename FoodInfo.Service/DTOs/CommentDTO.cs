@@ -10,5 +10,9 @@ namespace FoodInfo.Service.DTOs
     {
         public string UserComment { get; set; }
         public int ProductContentId { get; set; }
+
+        public string Username { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
     }
 }
