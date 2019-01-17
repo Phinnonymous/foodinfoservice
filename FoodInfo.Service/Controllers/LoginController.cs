@@ -42,7 +42,8 @@ namespace FoodInfo.Service.Controllers
                     if (HelperFunctions.ComputeSha256Hash(loginDTO.Password) == user.Password)
                     {
 
-                        
+                        loginDTO.IsAdmin = user.IsAdmin;
+                        loginDTO.IsModerator = user.IsModerator;
                         loginDTO.Email = user.Email;
                         loginDTO.Username = user.Username;
                         return apiJsonResponse.ApiOkContentResult(loginDTO);
