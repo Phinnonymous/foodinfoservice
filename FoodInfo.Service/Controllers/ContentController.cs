@@ -327,11 +327,11 @@ namespace FoodInfo.Service.Controllers
                             {
 
                              var content =    context.ProductContents.Where(x => x.Product.BarcodeId == contentDTO.Product.BarcodeId && x.Language.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted ==false).FirstOrDefault();
-                                
 
-                                
 
-                                
+
+
+                                contentDTO.NutritionFact.ID = 0;
                                 content.NutritionFact = Mapper.Map<NutritionFacts>(contentDTO.NutritionFact);
                                 content.CookingTips = contentDTO.CookingTips;
                                 content.Details = contentDTO.Details;
