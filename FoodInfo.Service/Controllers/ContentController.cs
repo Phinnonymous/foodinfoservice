@@ -274,5 +274,112 @@ namespace FoodInfo.Service.Controllers
                 return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
             }
         }
+
+
+        [HttpPost]
+        [Route("DeleteContent")]
+        public IActionResult DeleteContent(LanguageAndProductDTO languageAndProductDTO)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var product = context.ProductContents.Where(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId && x.Language.LanguageCode == languageAndProductDTO.LanguageCode && x.IsDeleted == false).FirstOrDefault();
+                    if (product == null)
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductDoesNotFound);
+                    }
+                    product.IsDeleted = true;
+
+                    context.SaveChanges();
+                    return apiJsonResponse.ApiOkContentResult(languageAndProductDTO);
+                }
+            }
+            catch (Exception ex)
+            {
+
+
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+
+
+        }
+
+
+        [HttpPost]
+        [Route("UpdateContent")]
+        public IActionResult UpdateContent(ContentDTO contentDTO)
+
+        //Product->BarcodeId && Language-> LanguageCode is necessary
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                if(contentDTO != null )
+                {
+                    using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                    {
+
+                        if (context.ProductContents.Any(x => x.Product.BarcodeId == contentDTO.Product.BarcodeId && x.Language.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted == false ))
+                        {
+                            if(contentDTO.NutritionFact != null  )
+                            {
+
+                             var content =    context.ProductContents.Where(x => x.Product.BarcodeId == contentDTO.Product.BarcodeId && x.Language.LanguageCode == contentDTO.Language.LanguageCode && x.IsDeleted ==false).FirstOrDefault();
+                                
+
+                                
+
+                                
+                                content.NutritionFact = Mapper.Map<NutritionFacts>(contentDTO.NutritionFact);
+                                content.CookingTips = contentDTO.CookingTips;
+                                content.Details = contentDTO.Details;
+                                content.Ingredients = contentDTO.Ingredients;
+                                content.Language = Mapper.Map<Language>(contentDTO.Language);
+                                content.Recommendations = contentDTO.Recommendations;
+                                content.VideoURL = contentDTO.VideoURL;
+                                content.Warnings = contentDTO.Warnings;
+                                content.ModifiedDate = DateTime.Now;
+                                if(contentDTO.ModifiedUserId ==null)
+                                {
+
+                                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
+
+                                }
+                                content.ModifiedUserId = contentDTO.ModifiedUserId;
+                                context.SaveChanges();
+                                return apiJsonResponse.ApiOkContentResult(contentDTO);
+                                
+                            }
+                            else
+                            {
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+                            }
+
+                        }
+                        else
+                        {
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+                        }
+                    }
+                        
+                }
+                else
+                {
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+            }
+        }
+
+
     }
 }

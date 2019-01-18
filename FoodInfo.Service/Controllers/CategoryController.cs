@@ -88,7 +88,9 @@ namespace FoodInfo.Service.Controllers
                                     }
                                     context.ProductCategories.Add(Mapper.Map<ProductCategory>(category));
                                     context.SaveChanges();
-
+                                    var lastItem = context.ProductCategories.Last();
+                                    category.ID = lastItem.ID;
+                                    category.Id = lastItem.ID;
                                     return apiJsonResponse.ApiOkContentResult(category);
                                 }
                                 else

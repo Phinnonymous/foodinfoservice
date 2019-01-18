@@ -172,7 +172,7 @@ namespace FoodInfo.Service.Controllers
                             {
                                 List<Product> products = context.Products.Where(x => x.ProductName.Contains(productName) && x.IsDeleted == false).ToList();
 
-                                if(products.Count ==0 )
+                                if (products.Count == 0)
                                 {
                                     return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductNotFound);
                                 }
@@ -181,7 +181,7 @@ namespace FoodInfo.Service.Controllers
                                     searchByNameDTOs.Add(Mapper.Map<SearchByNameDTO>(item));
 
                                 }
-                                
+
                                 return apiJsonResponse.ApiOkContentResult(searchByNameDTOs);
                             }
                             catch
@@ -203,7 +203,7 @@ namespace FoodInfo.Service.Controllers
 
                         }
                     }
-                   
+
                 }
                 else
                 {
@@ -216,5 +216,54 @@ namespace FoodInfo.Service.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        [Route("DeleteProduct")]
+        public IActionResult DeleteProduct(string BarcodeId)
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    if (BarcodeId != string.Empty)
+                    {
+                        var product = context.Products.Where(x => x.BarcodeId == BarcodeId && x.IsDeleted == false).FirstOrDefault();
+                        var contents = context.ProductContents.Where(x => x.Product.BarcodeId == BarcodeId && x.IsDeleted == false).ToList();
+                        if (contents != null )
+                        {
+                            foreach (var item in contents)
+                            {
+                                item.IsDeleted = true;
+                            }
+                        }
+                        if (product != null)
+                        {
+                            product.IsDeleted = true;
+                        }
+
+                        context.SaveChanges();
+                        return apiJsonResponse.ApiOkContentResult(BarcodeId);
+
+
+
+
+                    }
+                    else
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.BarcodIdRequired);
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+            }
+
+        }
     }
 }
