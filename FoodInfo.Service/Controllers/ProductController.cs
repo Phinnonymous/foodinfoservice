@@ -265,5 +265,34 @@ namespace FoodInfo.Service.Controllers
             }
 
         }
+
+        [HttpPost]
+        [Route("AllProducts")]
+        public IActionResult AllProduct()
+        {
+            var apiJsonResponse = new ApiJsonResponse();
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var products = context.Products.Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedDate).ToList();
+                    var productsDTO = new List<ProductDTO>();
+                    foreach(var item in products)
+                    {
+                        item.FirstImage = null;
+                        item.SecondImage = null;
+                        item.ThirdImage = null; 
+
+                        productsDTO.Add(Mapper.Map<ProductDTO>(item));
+                    }
+                    return apiJsonResponse.ApiOkContentResult(productsDTO);
+                }
+            }
+            catch
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
+
     }
 }
