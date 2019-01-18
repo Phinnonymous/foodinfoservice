@@ -115,9 +115,9 @@ namespace FoodInfo.Service.Controllers
                         {
                             if (context.ProductContents.Any(x => x.Language.LanguageCode == languageAndProductDTO.LanguageCode && x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId))
                             {
-                                var product = context.ProductContents.Where(x =>
-                                        x.Language.LanguageCode == languageAndProductDTO.LanguageCode &&
-                                        x.IsDeleted == false && x.Product.BarcodeId == languageAndProductDTO.BarcodeId)
+                                var product = context.ProductContents.Where(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId
+                                        && x.Language.LanguageCode == languageAndProductDTO.LanguageCode &&
+                                        x.IsDeleted == false)
                                     .Include(m => m.NutritionFact)
                                     .Include(m => m.Product).FirstOrDefault();
                                 ContentDTO contentDTO = Mapper.Map<ContentDTO>(product);
@@ -130,7 +130,7 @@ namespace FoodInfo.Service.Controllers
 
                                         List<CommentDTO> commentDTOs = new List<CommentDTO>();
                                         // contentDTO.Comments = Mapper.Map<List<CommentDTO>>(comments);
-                                        int i = 0; 
+                                        int i = 0;
                                         foreach (var item in comments)
                                         {
 
@@ -145,16 +145,16 @@ namespace FoodInfo.Service.Controllers
                                             commentDTO.ProductContentId = item.ProductContent.ID;
                                             commentDTO.ModifiedDate = item.ModifiedDate;
                                             commentDTO.ModifiedUserId = item.ModifiedUserId;
-                                           
-                                            
+
+
 
                                             commentDTOs.Add(commentDTO);
 
-                                            
+
 
                                         }
 
-                                        contentDTO.Comments = commentDTOs; 
+                                        contentDTO.Comments = commentDTOs;
                                     }
 
 
@@ -168,7 +168,7 @@ namespace FoodInfo.Service.Controllers
                                 int totalVotes = context.Votes.Count(x => x.Product.BarcodeId == languageAndProductDTO.BarcodeId);
                                 if (totalVotes == 0)
                                 {
-                                    contentDTO.AverageVote = 2.5M;
+                                    contentDTO.AverageVote = 5.0M;
                                 }
                                 else
                                 {
@@ -184,7 +184,7 @@ namespace FoodInfo.Service.Controllers
                                     { contentDTO.AverageVote = decimal.Round((count / (decimal)totalVotes), 2); }
                                     else
                                     {
-                                        contentDTO.AverageVote = 2.5M;
+                                        contentDTO.AverageVote = 5.0M;
                                     }
                                 }
 

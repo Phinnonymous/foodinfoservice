@@ -213,6 +213,92 @@ namespace FoodInfo.Service.Controllers
         }
 
         [HttpPost]
+        [Route("SetNormalUserByUsername")]
+        public IActionResult SetNormalUserByUsername(UserDTO userDTO)
+        {
+
+            var apiJsonResponse = new ApiJsonResponse();
+
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
+
+                    if (user == null)
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+
+                    }
+                    else
+                    {
+                        user.IsModerator = false;
+                        user.IsAdmin = false;
+                        user.ModifiedDate = DateTime.Now;
+                        if (userDTO.ModifiedUserId != null)
+                        {
+                            user.ModifiedUserId = userDTO.ModifiedUserId;
+                        }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
+                        }
+                        context.SaveChanges();
+                        return apiJsonResponse.ApiOkContentResult(Mapper.Map<AdminDTO>(user));
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteUserByUsername")]
+        public IActionResult DeleteUserByUsername(UserDTO userDTO)
+        {
+
+            var apiJsonResponse = new ApiJsonResponse();
+
+            try
+            {
+                using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                {
+                    var user = context.User.FirstOrDefault(x => x.Username == userDTO.Username && x.IsDeleted == false);
+
+                    if (user == null)
+                    {
+                        return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.UserNotFoundError);
+
+                    }
+                    else
+                    {
+                        user.IsDeleted = true;
+                        user.ModifiedDate = DateTime.Now;
+                        if (userDTO.ModifiedUserId != null)
+                        {
+                            user.ModifiedUserId = userDTO.ModifiedUserId;
+                        }
+                        else
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
+                        }
+                        context.SaveChanges();
+                        return apiJsonResponse.ApiOkContentResult(Mapper.Map<AdminDTO>(user));
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+            }
+        }
+
+
+        [HttpPost]
         [Route("GetAllUsersOrderByCreatedDate")]
         public IActionResult GetAllUsersOrderByCreatedDate()
         {

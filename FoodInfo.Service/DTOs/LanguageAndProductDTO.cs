@@ -7,7 +7,7 @@ namespace FoodInfo.Service.DTOs
 {
     public class LanguageAndProductDTO
     {
-        public string BarcodeId { get; set; } 
+        public string BarcodeId { get; set; }
         public string LanguageCode { get; set; }
     }
 }
