@@ -54,7 +54,8 @@ namespace FoodInfo.Service.Helper
         #endregion
         #region Product
         public static string ProductDoesNotFound { get; set; } = "PRD0001";
-
+        public static string ProductHasAlreadyGroup { get; set; } = "PRD0002";
+        public static string PleaseSelectMoreThanOneProduct { get; set; } = "PRD0003"; 
         #endregion
         #endregion
     }

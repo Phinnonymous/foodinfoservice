@@ -294,5 +294,66 @@ namespace FoodInfo.Service.Controllers
             }
         }
 
+
+        [HttpPost]
+        [Route("GroupProducts")]
+        public IActionResult GroupProducts(GroupProdutsDTO groupProdutsDTO)
+        {
+            var apiJsonResponse = new ApiJsonResponse(); 
+            try
+            {
+                if(groupProdutsDTO != null )
+                {
+
+                    using (FoodInfoServiceContext context = new FoodInfoServiceContext())
+                    {
+                       var product =  context.Products.OrderByDescending(x => x.ProductGroupId).FirstOrDefault();
+                        if(groupProdutsDTO.ModifiedUserId == null)
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ModifiedUserIdRequired);
+                        }
+
+
+                        if(groupProdutsDTO.BarcodeId.Count < 2)
+                        {
+                            return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.PleaseSelectMoreThanOneProduct);
+                        }
+                        foreach (var item in groupProdutsDTO.BarcodeId)
+                        {
+                            var groupedProduct = context.Products.Where(x => x.BarcodeId == item).FirstOrDefault();
+                            if(groupedProduct  == null )
+                            {
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductNotFound);
+                            }
+                            if(groupedProduct.ProductGroupId != 0 )
+                            {
+                                return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.ProductHasAlreadyGroup);
+                            }
+                            groupedProduct.ProductGroupId = product.ProductGroupId + 1;
+                            groupedProduct.ModifiedUserId = groupProdutsDTO.ModifiedUserId;
+                            groupedProduct.ModifiedDate = DateTime.Now;
+                            groupProdutsDTO.ProductGroupId = groupedProduct.ProductGroupId;
+                            
+                        }
+
+                        context.SaveChanges();
+                        return apiJsonResponse.ApiOkContentResult(groupProdutsDTO);
+                    }
+
+                    
+                }
+                else
+                {
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+                }
+            }
+            catch
+            {
+                    return apiJsonResponse.ApiBadRequestWithMessage(PublicConstants.SysErrorMessage);
+
+
+            }
+        }
     }
 }
