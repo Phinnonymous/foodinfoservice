@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FoodInfo.Service.DTOs
 {
-    public class GroupProdutsDTO : BaseDTO
+    public class GroupProductsDTO : BaseDTO
     {
 
         public List<string> BarcodeId { get; set; }

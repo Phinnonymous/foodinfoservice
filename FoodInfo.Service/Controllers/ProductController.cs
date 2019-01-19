@@ -297,7 +297,7 @@ namespace FoodInfo.Service.Controllers
 
         [HttpPost]
         [Route("GroupProducts")]
-        public IActionResult GroupProducts(GroupProdutsDTO groupProdutsDTO)
+        public IActionResult GroupProducts(GroupProductsDTO groupProdutsDTO)
         {
             var apiJsonResponse = new ApiJsonResponse(); 
             try
